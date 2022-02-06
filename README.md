@@ -79,3 +79,76 @@ React에서의 App.js가 하는 역할과 비슷하다. 모든 컴포넌트의 �
         )
     }
 ```
+
+<br />
+
+5. 스타일링 
+
+<br />
+
+JSX 문법안에서 스타일링이 가능하다. 그 틀을 style이라는 태그안에 {}와 ``(백틱)을 이용하며 된다. style 태그에 jsx를 props로 넘겨준다
+
+<br />
+
+```
+    ...
+
+    return(
+        <>
+        ...
+
+
+        <style jsx>{`
+            <!-- 스타일링 -->
+            ...
+        `}</style>
+
+        </>
+    )
+
+
+```
+
+<br />
+
+6. redirects vs rewrites
+
+<br />
+
+redirects: url를 이동을 시켜준다
+rewrites: 해당 url를 대체 시켜준다. 
+next.config.js에서 module안에 redirects와 rewrites 함수를 설정 할 수 있다. 해당 함수들은 이름그대로의 기능을 가지고 있는데, API KEY를 숨기기에 좋다. 
+
+<br />
+
+next.config.js
+```
+    const API_key = process.env.API_KEY;
+
+    module.exports = {
+        reactStrictMode: true,
+        async redirects(){
+            //리디렉션 함수
+            return [
+                {
+                    source: "/contact", //리디렉션 실행될 위치
+                    destination: "/form", //리디렉션 시키고 싶은 위치
+                    permanent: false, //이동 정보를 기억할 것인가.
+                }
+            ]
+        },
+        async rewrites(){
+            //리라이트 함수
+            return [
+                {
+                    source: "/api/movies", //대체될 url
+                    destination: `https://api.themoviedb.org/3/movie/popular? api_key=${API_key}` //대체하고픈 url
+                }
+            ];
+        }
+    }
+```
+
+<br />
+
+각 함수는 객체를 원소로 갖는 배열을 return 한다.
