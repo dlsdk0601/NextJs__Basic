@@ -142,7 +142,7 @@ next.config.js
             return [
                 {
                     source: "/api/movies", //대체될 url
-                    destination: `https://api.themoviedb.org/3/movie/popular? api_key=${API_key}` //대체하고픈 url
+                    destination: `https://api.themoviedb.org/3/movie/popular?api_key=${API_key}` //대체하고픈 url
                 }
             ];
         }
@@ -152,3 +152,105 @@ next.config.js
 <br />
 
 각 함수는 객체를 원소로 갖는 배열을 return 한다.
+
+<br />
+
+7. getServerSideProps()
+
+<br />
+
+일반적으로 Loading으로 API 통신을 통해 받은 데이터가 패칭이 완료될때까지 대치한다. 
+NextJS가 가지고 있는 SSR이라는 장점을 살리기 위해서는 이 부분도 pre render가 된 후 UI가 표시되게 하기 위해서 getServerSideProps 함수를 사용한다. 
+함수 이름은 절대 바꿔서는 안되고, return 값으로 object를 반환하는데 key값은 props로 설정한다.
+
+<br />
+
+```index.js
+
+    export async function getServerSideProps(){
+
+        const { results } = await (await fetch(`http://localhost:3000/api/movies`)).json();
+
+        return {
+            props: {
+                results,
+            },
+        };
+    }
+```
+
+<br />
+
+그 후 모든 컴포넌트에서는 results라는 props를 전달 받을 수 있고, 서버에서 데이터 패칭후 html 파일에 입혀진채로 UI에 표시된다. 
+API_KEY를 숨기고 싶을때, 6번과 같은 방법으로도 가능하지만, 이 함수를 사용하면 6번과 같은 설정없이도 불필요한 정보를 비노출 할 수 있다.
+
+<br />
+
+8. Route
+
+<br />
+
+1번의 설명을 참고해보면, react-router-dom을 이용하지 않고 파일의 이름으로 라우팅 되는 편안 기능을 확인했지만, 아직 중첩 라우팅의 방법을 소개하지 않았다. 
+중첩 라우팅의 경우 직관적으로 알 수있게 디렉터리로 구분한다. 
+예를 들어. /movies/detail, /movies/photo 와 같이 쓰고싶다면 movies라는 폴더안에 
+index.js, detail.js 그리고 photo.js를 작성하면 된다. index.js는 /movies라는 라우터의 index 페이지 이다.
+그러면 /movies/:id와 같은 라우팅 설정은 어떻게 하느냐, 
+[]를 이용하여 파일 이름을 설정한다. 아래의 표가 직관적으로 이해하기 편하다.
+
+<br />
+
+```
+    pages
+        ㄴ index.js
+        ㄴ about.js
+        ㄴ _app.js
+        ㄴ movies
+                ㄴ index.js
+                ㄴ [id].js
+```
+
+<br />
+
+9. push
+
+<br />
+
+리액트에서 사용한 useLocation의 기능을 사용하기 위해서 NextJS는 useRouter()를 사용한다. 내장 함수로 역시 push를 가지고 있는데, 여기서 쿼리문을 설정 할 수있고, 특별한 기능이라면 이 URL를 커스텀 할 수 있다.
+
+<br />
+
+```
+    const onClick = (id, title) => {
+        router.push({
+            pathname: `/movies/${id}`,
+            query: {
+                id,
+                title
+            }
+        }, `/movies/${id}`)
+    }
+```
+
+<br />
+
+3번째 인자를 넣지 않았다면 해당 url은 /movies/123154?id=123154&title=spiderman 이 된다. 허나 세번째 인자인 as를 이용하면 해당 url이 브라우저에는 /movies/123154로 보이게 된다. 
+
+<br />
+
+Link태그를 이용할때도 사용 가능하다. 
+
+<br />
+
+```
+    <Link href={{
+        pathname: `/movies/${mv.id}`,
+        query: {
+            id: mv.id,
+            title: mv.original_title
+        },
+        }}
+        as={`/movies/${mv.id}`}
+    >
+        <a> <h4>클릭!!</h4> </a>
+    </Link>
+```
