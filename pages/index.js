@@ -28,14 +28,16 @@ export default function Home({results}){
     //router Hook
     const router = useRouter();
     const onClick = (id, title) => {
-        router.push({
-            pathname: `/movies/${id}`,
-            query: {
-                id,
-                title
-            }
-        }, `/movies/${id}`)
+        // router.push({
+        //     pathname: `/movies/${id}`,
+        //     query: {
+        //         id,
+        //         title
+        //     }
+        // }, `/movies/${id}`)
         //query를 쓰면 일반적인 쿼리문으로 가지만, 3번째 인자로 문자열을 주면 url를 커스텀 할 수있다.
+
+        router.push(`/movies/${title}/${id}`);
     }
 
     return (
@@ -47,14 +49,16 @@ export default function Home({results}){
                     (    
                         <div className="movie" key={mv.id} onClick={ () => onClick(mv.id, mv.original_title)}>
                             <img src={`https://image.tmdb.org/t/p/w500/${mv.poster_path}`} />
-                            <Link href={{
-                                pathname: `/movies/${mv.id}`,
-                                query: {
-                                    id: mv.id,
-                                    title: mv.original_title
-                                },
-                                }}
-                                as={`/movies/${mv.id}`}
+                            <Link 
+                                href={`/movies/${mv.original_title}/${mv.id}`}
+                                // href={{
+                                //     pathname: `/movies/${mv.id}`,
+                                //     query: {
+                                //         id: mv.id,
+                                //         title: mv.original_title
+                                //     },
+                                // }}
+                                // as={`/movies/${mv.id}`}
                             >
                                 <a> <h4>{mv.original_title}</h4> </a>
                             </Link>

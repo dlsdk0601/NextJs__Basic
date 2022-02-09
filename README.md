@@ -254,3 +254,48 @@ Link태그를 이용할때도 사용 가능하다.
         <a> <h4>클릭!!</h4> </a>
     </Link>
 ```
+
+<br />
+
+10. [...params].js
+
+<br />
+
+중첩 라우트를 위해 디렉토릴르 이용한다는 내용이 있었는데, 디렉토리안에 파일 이름에 ...을 붙이면 URL의 모든 정보를 가져올 수 있다. 
+useRouter를 콘솔에 찍어보면, query라는 키값 안에 params의 정보가 배열로 들어가 있는걸 확인 할 수 있다.
+이를 통해 ES6문법으로 좀 더 편하게 변수 할당을 한다.
+
+<br />
+
+```[...parmas].js
+
+    const [ title, id ] = router?.query?.params || [];
+
+```
+
+<br />
+
+|| [] 은 사용자가 url로 바로 타고 들어올 경우 에러 페이지가 나는걸 방지하기 위함
+
+<br />
+
+11. 404 Not Found
+
+<br />
+
+404 Not Found 페이지를 커스텀 할 수있다. 404.js 라는 파일을 만들어 원하는대로 커스텀만 하면 된다. 
+
+<br />
+
+
+```404.js
+    export default function NotFound(){
+
+        return (
+            <div>
+                <p>here is 404 Not Found page</p>
+            </div>
+        )
+    }
+```
+
